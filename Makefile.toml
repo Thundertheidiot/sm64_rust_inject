@@ -1,0 +1,21 @@
+[tasks.clean_obj]
+command = "rm"
+args = ["-rf", "./out"]
+
+[tasks.mkdir_out]
+command = "mkdir"
+args = ["./out"]
+
+[tasks.make_obj]
+command = "cargo"
+args = ["rustc", "--release", "--", "--emit=obj", "-o", "./out/lib.o"]
+dependencies = ["clean_obj", "mkdir_out"]
+
+[tasks.obj]
+command = "fd"
+args = ['\.o$', "./out", "--exec", "mv", "{}", "./out/lib.o"]
+dependencies = ["make_obj"]
+
+[tasks.nm]
+command = "nm"
+args = ["./out/lib.o"]
