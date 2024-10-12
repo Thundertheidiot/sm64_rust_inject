@@ -1,5 +1,4 @@
 #![no_std]
-#![feature(c_str_literals)]
 #[panic_handler]
 fn panic(_: &::core::panic::PanicInfo) -> ! {
     loop {}
@@ -27,7 +26,7 @@ pub extern "C" fn silly_print(x: i32) {
 
     for (i, num) in silly_ints.iter().enumerate() {
         unsafe {
-            print_text_fmt_int(x, 133 + (i as i32 * 20), goofy, (x * *num));
+            print_text_fmt_int(x, 133 + (i as i32 * 20), goofy, x * *num);
         }
     }
 
