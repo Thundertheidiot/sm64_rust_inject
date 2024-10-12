@@ -1,0 +1,20 @@
+Instructions for non cargo build, assuming target is src_sh{nightly-2024-08-05} as specified in rust-toolchain.toml
+
+Preliminary steps
+1. Build core with src_sh{cargo +nightly-2024-08-05 build --release}
+   - Run this inside this crate specifically, this command relies on the target and cargo options set here.
+2. Copy the rlib files from src_sh{target/target/release/deps} to your designated lib dir
+3. Copy src_sh{target.json} to somewhere you can access
+
+Building files
+
+#+begin_src shell
+rustc +nightly-2024-08-05 --edition 2021 -Z unstable-options \
+      -C embed-bitcode=no -C opt-level=z -C panic=abort \
+      --target=./target.json \
+      --extern 'noprelude:rustc_std_workspace_core=libdir/librustc_std_workspace_core.rlib' \
+      --extern 'noprelude:core=libdir/libcore.rlib' \
+      --extern 'noprelude:compiler_builtins=libdir/libcompiler_builtins.rlib' \
+      -L dependency=libdir \
+      --crate-type=staticlib --emit=obj ./FILE.rs -o FILE.o 
+#+end_src
